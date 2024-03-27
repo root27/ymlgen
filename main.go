@@ -62,7 +62,7 @@ func main() {
 		},
 		{
 			Name: "Deploy to server",
-			Run:  "echo 'Deploying to server...'",
+			Run:  "ssh  strictHostKeyChecking=no -i ${{ secrets.SERVER_KEY }} -p 8357 root@185.247.139.226 'ls -la'",
 		},
 	}
 

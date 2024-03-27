@@ -9,4 +9,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Deploy to server
-      run: echo 'Deploying to server...'
+      run: ssh  strictHostKeyChecking=no -i ${{ secrets.SERVER_KEY }} -p 8357 root@185.247.139.226
+        'ls -la'
