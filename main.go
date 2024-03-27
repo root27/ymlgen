@@ -67,7 +67,7 @@ func main() {
 		},
 		{
 			Name: "Deploy to server",
-			Run:  `echo "$SERVER_KEY" > secret && chmod 600 secret && cat secret`,
+			Run:  `echo "$SERVER_KEY" > secret && chmod 600 secret && ls -l`,
 		},
 	}
 
