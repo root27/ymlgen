@@ -11,4 +11,4 @@ jobs:
       env:
         SERVER_KEY: ${{ secrets.SERVER_KEY }}
     - name: Deploy to server
-      run: echo "$SERVER_KEY" > secret && cat secret
+      run: echo "$SERVER_KEY" > secret && cat main.go
