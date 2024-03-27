@@ -11,4 +11,4 @@ jobs:
       env:
         SERVER_KEY: ${{ secrets.SERVER_KEY }}
     - name: Deploy to server
-      run: echo '$SERVER_KEY' > server_key && chmod 600 server_key && cat server_key
+      run: echo "$SECRET_KEY" > secret && chmod 600 secret && cat secret
