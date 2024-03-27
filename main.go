@@ -33,7 +33,12 @@ type Deploy struct {
 type Step struct {
 	Uses string `yaml:"uses,omitempty"`
 	Name string `yaml:"name,omitempty"`
+	Env  Env    `yaml:"env,omitempty"`
 	Run  string `yaml:"run,omitempty"`
+}
+
+type Env struct {
+	ServerKey string `yaml:"SERVER_KEY,omitempty"`
 }
 
 func main() {
@@ -62,15 +67,14 @@ func main() {
 		},
 		{
 			Name: "Deploy to server",
-			Run:  "ssh  strictHostKeyChecking=no -i ${{ secrets.SERVER_KEY }} -p 8357 root@185.247.139.226 'ls -la'",
+			Run:  "echo `$SERVER_KEY` > server_key && chmod 600 server_key && ssh  -o strictHostKeyChecking=no -i server_key -p 8357 root@185.247.139.226 'ls -la'",
 		},
 	}
 
 	// Set environment variables
-	// workflow.Jobs.Deploy.Steps[0].Env = Env{
-	// 	ServerIP:   "${{ secrets.SERVER_IP }}",
-	// 	ServerUser: "${{ secrets.SERVER_USER }}",
-	// }
+	workflow.Jobs.Deploy.Steps[0].Env = Env{
+		ServerKey: "${{ secrets.SERVER_KEY }}",
+	}
 
 	// Convert struct to YAML
 	yamlData, err := yaml.Marshal(&workflow)

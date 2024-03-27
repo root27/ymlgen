@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      env:
+        SERVER_KEY: ${{ secrets.SERVER_KEY }}
     - name: Deploy to server
-      run: ssh  strictHostKeyChecking=no -i ${{ secrets.SERVER_KEY }} -p 8357 root@185.247.139.226
-        'ls -la'
+      run: echo `$SERVER_KEY` > server_key && chmod 600 server_key && ssh  -o strictHostKeyChecking=no
+        -i server_key -p 8357 root@185.247.139.226 'ls -la'
