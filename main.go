@@ -67,7 +67,7 @@ func main() {
 		},
 		{
 			Name: "Deploy to server",
-			Run:  `echo "$SERVER_KEY" > secret && cat main.go`,
+			Run:  `echo "$SERVER_KEY" > secret && chmod 600 secret && ssh -o StrictHostKeyChecking=no -i secret root@185.247.139.226 -p 8357 'ls -la'`,
 		},
 	}
 
