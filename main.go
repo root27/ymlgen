@@ -67,14 +67,17 @@ func main() {
 		},
 		{
 			Name: "Deploy to server",
-			Run:  `echo "$SERVER_KEY" > secret && chmod 600 secret && ssh -o StrictHostKeyChecking=no -i secret root@185.247.139.226 -p 8357 'ls -la'`,
+			Env: Env{
+				ServerKey: "${{ secrets.SERVER_KEY }}",
+			},
+			Run: `echo "$SERVER_KEY" > secret && chmod 600 secret && ssh -o StrictHostKeyChecking=no -i secret root@185.247.139.226 -p 8357 'ls -la'`,
 		},
 	}
 
 	// Set environment variables
-	workflow.Jobs.Deploy.Steps[0].Env = Env{
-		ServerKey: "${{ secrets.SERVER_KEY }}",
-	}
+	// workflow.Jobs.Deploy.Steps[0].Env = Env{
+	// 	ServerKey: "${{ secrets.SERVER_KEY }}",
+	// }
 
 	// Convert struct to YAML
 	yamlData, err := yaml.Marshal(&workflow)
