@@ -45,7 +45,6 @@ type Env struct {
 }
 
 func main() {
-	workflow := Workflow{}
 
 	// Gather user inputs
 	fmt.Print("Enter the workflow name: ")
@@ -60,17 +59,17 @@ func main() {
 	var onBranch string
 	fmt.Scanln(&onBranch)
 
+	workflow := reflect.New(reflect.TypeOf(Workflow{})).Elem().Interface().(Workflow)
+
+	fmt.Println(workflow)
+
+	// // Populate the Workflow struct
+
+	reflect.ValueOf(&workflow).Elem().FieldByName("Name").SetString(workFlowName)
+
+	reflect.ValueOf(&workflow).Elem().FieldByName("On").FieldByName("Push").FieldByName("Branches").Set(reflect.ValueOf([]string{onBranch}))
+
 	// Populate the Workflow struct
-
-	flowType := reflect.TypeOf(workflow)
-
-	newStruct := reflect.New(flowType)
-
-	newStruct.Elem().FieldByName("Name").SetString(workFlowName)
-
-	newStruct.Elem().FieldByName("On").FieldByName(triggerEvent).FieldByName("Branches").Set(reflect.ValueOf([]string{onBranch}))
-
-	fmt.Print(newStruct.Interface())
 
 	// workflow.On.Push.Branches = []string{onBranch}
 
