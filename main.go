@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"strings"
@@ -53,10 +54,20 @@ func main() {
 
 	var secretName string
 
+	var runCommand string
+
 	if strings.ToLower(addSecret) == "y" {
 		fmt.Print("Enter the secret name: ")
 
 		fmt.Scanln(&secretName)
+
+		reader := bufio.NewScanner(os.Stdin)
+
+		fmt.Print("Enter the command to run: ")
+
+		reader.Scan()
+
+		runCommand = reader.Text()
 
 	}
 
@@ -88,7 +99,8 @@ func main() {
 			secretName: "${{ secrets." + secretName + " }}",
 		}
 
-		workflow.Jobs.Deploy.Steps[1].Run = "echo hello"
+		workflow.Jobs.Deploy.Steps[1].Run = runCommand
+
 	}
 
 	fmt.Printf("Workflow steps: %v\n", workflow.Jobs.Deploy.Steps)

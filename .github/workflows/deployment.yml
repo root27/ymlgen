@@ -11,4 +11,4 @@ jobs:
     - name: Test Action
       env:
         SERVER_KEY: ${{ secrets.SERVER_KEY }}
-      run: echo hello
+      run: echo hello world
