@@ -77,14 +77,18 @@ func main() {
 	workflow.Jobs.Deploy.Steps = []Step{
 		{
 			Uses: "actions/checkout@v2",
-			Name: "Deploy to server",
+		},
+		{
+			Name: "Test Action",
 		},
 	}
 
 	if secretName != "" {
-		workflow.Jobs.Deploy.Steps[0].Env = Env{
+		workflow.Jobs.Deploy.Steps[1].Env = Env{
 			secretName: "${{ secrets." + secretName + " }}",
 		}
+
+		workflow.Jobs.Deploy.Steps[1].Run = "echo hello"
 	}
 
 	fmt.Printf("Workflow steps: %v\n", workflow.Jobs.Deploy.Steps)
