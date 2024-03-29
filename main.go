@@ -19,20 +19,18 @@ type Jobs struct {
 }
 
 type Deploy struct {
-	RunsOn string      `yaml:"runs-on"`
-	Steps  interface{} `yaml:"steps"`
+	RunsOn string `yaml:"runs-on"`
+	Steps  []Step `yaml:"steps"`
 }
 
 type Step struct {
-	Uses string      `yaml:"uses,omitempty"`
-	Name string      `yaml:"name,omitempty"`
-	Env  interface{} `yaml:"env"`
-	Run  string      `yaml:"run,omitempty"`
+	Uses string `yaml:"uses,omitempty"`
+	Name string `yaml:"name,omitempty"`
+	Env  Env    `yaml:"env,omitempty"`
+	Run  string `yaml:"run,omitempty"`
 }
 
-// type Env struct {
-// 	ServerKey string `yaml:"SERVER_KEY,omitempty"`
-// }
+type Env map[string]interface{}
 
 func main() {
 
@@ -53,9 +51,11 @@ func main() {
 	var addSecret string
 	fmt.Scanln(&addSecret)
 
+	var secretName string
+
 	if strings.ToLower(addSecret) == "y" {
 		fmt.Print("Enter the secret name: ")
-		var secretName string
+
 		fmt.Scanln(&secretName)
 
 	}
@@ -73,26 +73,21 @@ func main() {
 	}
 
 	workflow.Jobs.Deploy.RunsOn = "ubuntu-latest"
-	// workflow.Jobs.Deploy.Steps = []Step{
-	// 	{
-	// 		Uses: "actions/checkout@v2",
-	// 	},
-	// 	{
-	// 		Name: "Deploy to server",
-	// 		Env: map[string]interface{}{
-	// 			secretName: "${{ secrets." + secretName + " }}",
-	// 		},
-	// 		Run: `echo "$SERVER_KEY" > secret && chmod 600 secret && ssh -o StrictHostKeyChecking=no -i secret root@185.247.139.226 -p 8357 'ls -la'`,
-	// 	},
-	// }
 
-	workflow.Jobs.Deploy.Steps = map[string]interface{}{
-		"uses": "actions/checkout@v2",
-		"name": "Deploy to server",
-		"env": map[string]interface{}{
-			secretName: "${{ secrets." + secretName + " }}",
+	workflow.Jobs.Deploy.Steps = []Step{
+		{
+			Uses: "actions/checkout@v2",
+			Name: "Deploy to server",
 		},
 	}
+
+	if secretName != "" {
+		workflow.Jobs.Deploy.Steps[0].Env = Env{
+			secretName: "${{ secrets." + secretName + " }}",
+		}
+	}
+
+	fmt.Printf("Workflow steps: %v\n", workflow.Jobs.Deploy.Steps)
 
 	// Convert struct to YAML
 	yamlData, err := yaml.Marshal(&workflow)
