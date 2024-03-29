@@ -3,13 +3,12 @@ name: test
   push:
     branches:
     - master
-    - main
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions
-      name: test
+    - name: Deploy
       env:
-        deploy: ${{ secrets.deploy }}
-      run: ec
+        SERVER_KEY: ${{ secrets.SERVER_KEY }}
+      run: echo hello world
