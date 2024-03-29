@@ -48,28 +48,15 @@ func main() {
 	var onBranch string
 	fmt.Scanln(&onBranch)
 
-	fmt.Print("Would you like to add a secret? (y/n): ")
+	fmt.Printf("How many steps would you like to add to the workflow?: ")
+	var stepCount int
+	fmt.Scanln(&stepCount)
+
 	var addSecret string
-	fmt.Scanln(&addSecret)
 
 	var secretName string
 
 	var runCommand string
-
-	if strings.ToLower(addSecret) == "y" {
-		fmt.Print("Enter the secret name: ")
-
-		fmt.Scanln(&secretName)
-
-		reader := bufio.NewScanner(os.Stdin)
-
-		fmt.Print("Enter the command to run: ")
-
-		reader.Scan()
-
-		runCommand = reader.Text()
-
-	}
 
 	// Populate the Workflow struct
 
@@ -85,21 +72,54 @@ func main() {
 
 	workflow.Jobs.Deploy.RunsOn = "ubuntu-latest"
 
-	workflow.Jobs.Deploy.Steps = []Step{
-		{
-			Uses: "actions/checkout@v2",
-		},
-		{
-			Name: "Test Action",
-		},
-	}
+	for i := 0; i < stepCount; i++ {
 
-	if secretName != "" {
-		workflow.Jobs.Deploy.Steps[1].Env = Env{
-			secretName: "${{ secrets." + secretName + " }}",
+		fmt.Printf("Enter the uses for step %d: ", i+1)
+		var uses string
+		fmt.Scanln(&uses)
+
+		// Gather user inputs for steps
+		fmt.Printf("Enter the step %d name: ", i+1)
+		var stepName string
+		fmt.Scanln(&stepName)
+
+		fmt.Print("Would you like to add a secret? (y/n): ")
+
+		fmt.Scanln(&addSecret)
+
+		if strings.ToLower(addSecret) == "y" {
+
+			fmt.Print("Enter the secret name: ")
+			fmt.Scanln(&secretName)
+
+			fmt.Printf("Enter the step %d command to run: ", i+1)
+
+			scanner := bufio.NewScanner(os.Stdin)
+
+			scanner.Scan()
+
+			runCommand = scanner.Text()
+
+			// Add step to workflow
+
+			workflow.Jobs.Deploy.Steps = append(workflow.Jobs.Deploy.Steps, Step{
+				Uses: uses,
+				Name: stepName,
+				Env: Env{
+					secretName: "${{ secrets." + secretName + " }}",
+				},
+				Run: runCommand,
+			})
+
+			continue
 		}
 
-		workflow.Jobs.Deploy.Steps[1].Run = runCommand
+		// Add step to workflow
+
+		workflow.Jobs.Deploy.Steps = append(workflow.Jobs.Deploy.Steps, Step{
+			Uses: uses,
+			Name: stepName,
+		})
 
 	}
 
