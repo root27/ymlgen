@@ -13,19 +13,6 @@ type Workflow struct {
 	Jobs Jobs        `yaml:"jobs"`
 }
 
-// type On struct {
-// 	Push Push `yaml:"push"`
-// 	Pull Pull `yaml:"pull_request"`
-// }
-
-type Pull struct {
-	Branches []string `yaml:"branches"`
-}
-
-type Push struct {
-	Branches []string `yaml:"branches"`
-}
-
 type Jobs struct {
 	Deploy Deploy `yaml:"deploy"`
 }
@@ -36,15 +23,15 @@ type Deploy struct {
 }
 
 type Step struct {
-	Uses string `yaml:"uses,omitempty"`
-	Name string `yaml:"name,omitempty"`
-	Env  Env    `yaml:"env,omitempty"`
-	Run  string `yaml:"run,omitempty"`
+	Uses string      `yaml:"uses,omitempty"`
+	Name string      `yaml:"name,omitempty"`
+	Env  interface{} `yaml:"env"`
+	Run  string      `yaml:"run,omitempty"`
 }
 
-type Env struct {
-	ServerKey string `yaml:"SERVER_KEY,omitempty"`
-}
+// type Env struct {
+// 	ServerKey string `yaml:"SERVER_KEY,omitempty"`
+// }
 
 func main() {
 
@@ -67,19 +54,10 @@ func main() {
 
 	workflow.Name = workFlowName
 
-	if triggerEvent == "push" {
-		workflow.On = map[string]interface{}{
-			"push": map[string]interface{}{
-				"branches": []string{onBranch},
-			},
-		}
-	} else {
-		workflow.On = map[string]interface{}{
-			"pull_request": map[string]interface{}{
-				"branches": []string{onBranch},
-			},
-		}
-
+	workflow.On = map[string]interface{}{
+		triggerEvent: map[string]interface{}{
+			"branches": []string{onBranch},
+		},
 	}
 
 	workflow.Jobs.Deploy.RunsOn = "ubuntu-latest"
