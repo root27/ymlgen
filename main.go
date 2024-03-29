@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -18,8 +19,8 @@ type Jobs struct {
 }
 
 type Deploy struct {
-	RunsOn string `yaml:"runs-on"`
-	Steps  []Step `yaml:"steps"`
+	RunsOn string      `yaml:"runs-on"`
+	Steps  interface{} `yaml:"steps"`
 }
 
 type Step struct {
@@ -48,6 +49,17 @@ func main() {
 	var onBranch string
 	fmt.Scanln(&onBranch)
 
+	fmt.Print("Would you like to add a secret? (y/n): ")
+	var addSecret string
+	fmt.Scanln(&addSecret)
+
+	if strings.ToLower(addSecret) == "y" {
+		fmt.Print("Enter the secret name: ")
+		var secretName string
+		fmt.Scanln(&secretName)
+
+	}
+
 	// Populate the Workflow struct
 
 	workflow := Workflow{}
@@ -61,16 +73,24 @@ func main() {
 	}
 
 	workflow.Jobs.Deploy.RunsOn = "ubuntu-latest"
-	workflow.Jobs.Deploy.Steps = []Step{
-		{
-			Uses: "actions/checkout@v2",
-		},
-		{
-			Name: "Deploy to server",
-			Env: Env{
-				ServerKey: "${{ secrets.SERVER_KEY }}",
-			},
-			Run: `echo "$SERVER_KEY" > secret && chmod 600 secret && ssh -o StrictHostKeyChecking=no -i secret root@185.247.139.226 -p 8357 'ls -la'`,
+	// workflow.Jobs.Deploy.Steps = []Step{
+	// 	{
+	// 		Uses: "actions/checkout@v2",
+	// 	},
+	// 	{
+	// 		Name: "Deploy to server",
+	// 		Env: map[string]interface{}{
+	// 			secretName: "${{ secrets." + secretName + " }}",
+	// 		},
+	// 		Run: `echo "$SERVER_KEY" > secret && chmod 600 secret && ssh -o StrictHostKeyChecking=no -i secret root@185.247.139.226 -p 8357 'ls -la'`,
+	// 	},
+	// }
+
+	workflow.Jobs.Deploy.Steps = map[string]interface{}{
+		"uses": "actions/checkout@v2",
+		"name": "Deploy to server",
+		"env": map[string]interface{}{
+			secretName: "${{ secrets." + secretName + " }}",
 		},
 	}
 
