@@ -7,8 +7,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: deploy
+    - uses: actions
+    - name: test
       env:
-        SERVER_KEY: ${{ secrets.SERVER_KEY }}
-      run: echo "Hello world"
+        server: ${{ secrets.server }}
+      run: echo

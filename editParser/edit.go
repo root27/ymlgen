@@ -19,7 +19,7 @@ func EditParser(yamlData []byte, workflow *structs.Workflow) error {
 
 			for i, line := range lines {
 
-				if strings.Contains(line, "name: "+step.Name) {
+				if strings.Contains(line, "name: "+step.Name) && i != 0 {
 
 					count := 0
 
