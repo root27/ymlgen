@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions
+    - uses: actions/checkout@v2
     - name: test
       env:
         server: ${{ secrets.server }}
