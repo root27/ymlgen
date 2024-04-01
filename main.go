@@ -6,32 +6,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/root27/yml-parser/editParser"
+	"github.com/root27/yml-parser/structs"
 	"gopkg.in/yaml.v2"
 )
-
-type Workflow struct {
-	Name string      `yaml:"name"`
-	On   interface{} `yaml:"on"`
-	Jobs Jobs        `yaml:"jobs"`
-}
-
-type Jobs struct {
-	Deploy Deploy `yaml:"deploy"`
-}
-
-type Deploy struct {
-	RunsOn string `yaml:"runs-on"`
-	Steps  []Step `yaml:"steps"`
-}
-
-type Step struct {
-	Uses string `yaml:"uses,omitempty"`
-	Name string `yaml:"name,omitempty"`
-	Env  Env    `yaml:"env,omitempty"`
-	Run  string `yaml:"run,omitempty"`
-}
-
-type Env map[string]interface{}
 
 func main() {
 
@@ -60,7 +38,7 @@ func main() {
 
 	// Populate the Workflow struct
 
-	workflow := Workflow{}
+	workflow := structs.Workflow{}
 
 	workflow.Name = workFlowName
 
@@ -102,10 +80,10 @@ func main() {
 
 			// Add step to workflow
 
-			workflow.Jobs.Deploy.Steps = append(workflow.Jobs.Deploy.Steps, Step{
+			workflow.Jobs.Deploy.Steps = append(workflow.Jobs.Deploy.Steps, structs.Step{
 				Uses: uses,
 				Name: stepName,
-				Env: Env{
+				Env: structs.Env{
 					secretName: "${{ secrets." + secretName + " }}",
 				},
 				Run: runCommand,
@@ -116,14 +94,12 @@ func main() {
 
 		// Add step to workflow
 
-		workflow.Jobs.Deploy.Steps = append(workflow.Jobs.Deploy.Steps, Step{
+		workflow.Jobs.Deploy.Steps = append(workflow.Jobs.Deploy.Steps, structs.Step{
 			Uses: uses,
 			Name: stepName,
 		})
 
 	}
-
-	fmt.Printf("Workflow steps: %v\n", workflow.Jobs.Deploy.Steps)
 
 	// Convert struct to YAML
 	yamlData, err := yaml.Marshal(&workflow)
@@ -132,13 +108,13 @@ func main() {
 		return
 	}
 
-	// Write YAML to file
-	err = os.WriteFile(".github/workflows/deployment.yml", yamlData, 0644)
+	err = editParser.EditParser(yamlData, &workflow)
+
 	if err != nil {
-		fmt.Printf("Error writing YAML file: %v\n", err)
+		fmt.Printf("Error editing YAML: %v\n", err)
 		return
 	}
 
-	fmt.Println("Deployment YAML file generated successfully.")
+	fmt.Println("Workflow created successfully")
 
 }
