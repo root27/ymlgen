@@ -12,7 +12,7 @@ type Jobs struct {
 
 type Deploy struct {
 	RunsOn string `yaml:"runs-on"`
-	Steps  []Step `yaml:"steps"`
+	Steps  []Step `yaml:"steps,omitempty"`
 }
 
 type Step struct {
