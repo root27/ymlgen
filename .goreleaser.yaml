@@ -21,7 +21,7 @@ builds:
 brews:
   - 
     name: ymlgen
-    homepage: https://github.com/root27/yml-parser
+    homepage: https://github.com/root27/ymlgen
    
     repository:
       owner: root27
