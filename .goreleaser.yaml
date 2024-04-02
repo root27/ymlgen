@@ -1,0 +1,29 @@
+
+version: 1
+
+before:
+  hooks:
+    - go mod tidy
+    - go mod download
+
+builds:
+  - binary: ymlgen
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+
+    goarch:
+      - amd64
+      - arm64
+   
+brews:
+  - 
+    name: ymlgen
+    homepage: https://github.com/root27/yml-parser
+   
+    repository:
+      owner: root27
+      name: homebrew-tools
+    
