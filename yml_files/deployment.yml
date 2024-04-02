@@ -1,0 +1,19 @@
+name: test
+"on":
+  push:
+    branches:
+    - master
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions
+    - name: test1
+      env:
+        server: ${{ secrets.server }}
+      run: echo
+    - uses: actions2
+    - name: test2
+      env:
+        server2: ${{ secrets.server2 }}
+      run: echo2

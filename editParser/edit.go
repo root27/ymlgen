@@ -46,7 +46,7 @@ func EditParser(yamlData []byte, workflow *structs.Workflow) error {
 
 	newFileData := strings.Join(lines, "\n")
 
-	err := os.WriteFile(".github/workflows/deployment.yml", []byte(newFileData), 0644)
+	err := os.WriteFile("yml_files/deployment.yml", []byte(newFileData), 0644)
 
 	if err != nil {
 
