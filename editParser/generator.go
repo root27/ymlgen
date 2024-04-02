@@ -123,6 +123,4 @@ func Generator() {
 		return
 	}
 
-	fmt.Println("Workflow created successfully")
-
 }

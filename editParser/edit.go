@@ -1,9 +1,7 @@
 package editParser
 
 import (
-	"errors"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/root27/yml-parser/structs"
@@ -33,7 +31,7 @@ func EditParser(yamlData []byte, workflow *structs.Workflow) error {
 
 					}
 
-					fmt.Printf("Count: %d\n", count)
+					// fmt.Printf("Count: %d\n", count)
 
 					lines[i] = strings.Repeat(" ", count-3) + "- name: " + step.Name
 
@@ -46,13 +44,7 @@ func EditParser(yamlData []byte, workflow *structs.Workflow) error {
 
 	newFileData := strings.Join(lines, "\n")
 
-	err := os.WriteFile("yml_files/deployment.yml", []byte(newFileData), 0644)
-
-	if err != nil {
-
-		return errors.New("error writing to file")
-
-	}
+	fmt.Println(newFileData)
 
 	return nil
 
