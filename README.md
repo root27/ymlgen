@@ -7,7 +7,7 @@ This is a simple tool that generates Github Actions yml file using user inputs. 
 
 1. Welcome Screen
 
-<img src="./screenshots/mainScreen.png" width=700 height=400 alt="Main Screen" />
+![Welcome Screen](./screenshots/mainScreen.png)
 
 2. User Inputs
 
