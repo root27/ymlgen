@@ -15,7 +15,7 @@ This is a simple tool that generates Github Actions yml file using user inputs. 
 
 3. Generated Yml
 
-<img src="./screenshots/output.png" width=400 height=200 alt="Generated Yml" />
+<img src="./screenshots/output.png" width=400 height=300 alt="Generated Yml" />
 
 
 ## LICENSE
