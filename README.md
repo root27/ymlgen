@@ -18,6 +18,32 @@ This is a simple tool that generates Github Actions yml file using user inputs. 
 <img src="./screenshots/output.png" width=400 height=300 alt="Generated Yml" />
 
 
+## Installation - Homebrew
+
+```bash
+
+brew tap root27/tools
+
+brew install ymlgen
+
+```
+
+or 
+
+```bash
+
+brew install root27/tools/ymlgen
+
+```
+
+## Usage
+
+```bash
+
+ymlgen
+
+```
+
 ## LICENSE
 
 [MIT LICENSE](LICENSE)
